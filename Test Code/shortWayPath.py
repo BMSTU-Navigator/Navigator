@@ -6,12 +6,14 @@ def Dijkstra(N, S, matrix):
     weight = [1000000] * N
     weight[S] = 0
     for i in range(N):
+        paths[i]=[]
         min_weight = 1000001
         ID_min_weight = -1
-        for i in range(len(weight)):
+        for i in range(N):
             if valid[i] and weight[i] < min_weight:
                 min_weight = weight[i]
                 ID_min_weight = i
+
         for i in range(N):
             if weight[ID_min_weight] + matrix[ID_min_weight][i] < weight[i]:
                 weight[i] = weight[ID_min_weight] + matrix[ID_min_weight][i]
@@ -21,7 +23,11 @@ def Dijkstra(N, S, matrix):
 
 #      -4-5-8-
 # 1-2-3<        >-9
-#      -6-7---
+#
+
+
+paths=[]
+
 g = []
 for i in range(10):
     g.append([10000] * 10)
