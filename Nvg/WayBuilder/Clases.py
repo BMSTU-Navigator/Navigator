@@ -1,13 +1,17 @@
 class Graph:
-    connections=[]
+    connections = []
 
-    def __init__(self,connections):
+    def __init__(self, connections):
         super().__init__()
-        self.connections=connections
+        self.connections = connections
 
-    def reque_path(self,start_point,stop_point,detalization_level):
+    def __init__(self):
+        super().__init__()
+        # load data from db
 
+    def reque_path(self, start_point, stop_point, detalization_level):
         return None
+
 
 class GraphConnection:
     point1 = -1
@@ -29,3 +33,13 @@ class GraphConnection:
         self.connection_comment = connection_comment
         self.picture_path = picture_path
         self.floor_index = floor_index
+
+
+class Floor:
+    picture_path = None
+    floor_index = -1
+
+
+class Path:
+    connections = []
+    floors = []
