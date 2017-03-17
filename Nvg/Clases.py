@@ -1,10 +1,6 @@
 class Graph:
     connections = []
-
-    def __init__(self, connections):
-        super().__init__()
-        self.connections = connections
-
+    points=[]
     def __init__(self):
         super().__init__()
         # load data from db
@@ -14,8 +10,8 @@ class Graph:
 
 
 class GraphConnection:
-    point1 = -1
-    point2 = -1
+    point1 = None
+    point2 = None
 
     connection_weight = -1
 
@@ -24,7 +20,7 @@ class GraphConnection:
     picture_path = None
 
     floor_index = -1
-
+    trans_floor_marker=False;
     def __init__(self, point1, point2, connection_weight, connection_comment, picture_path, floor_index):
         super().__init__()
         self.point1 = point1
@@ -41,5 +37,15 @@ class Floor:
 
 
 class Path:
+    points = []
     connections = []
     floors = []
+
+class Point:
+    id=-1
+    name=None
+    floor_index=-1
+    path_for_point_pic=None
+    x=-1
+    y=-1
+
