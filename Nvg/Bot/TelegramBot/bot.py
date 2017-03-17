@@ -1,12 +1,9 @@
 #https://groosha.gitbooks.io/telegram-bot-lessons/content/chapter1.h
 
-from Nvg.Bot import telebot
-from Nvg.Bot.testEchoBot import config
-
-
 from Nvg.Bot.chatterbot import ChatBot
 
-
+from Nvg.Bot.TelegramBot import config
+from Nvg.old_code import telebot
 
 bot = telebot.TeleBot(config.token)
 chatbot = ChatBot('Charlie')
