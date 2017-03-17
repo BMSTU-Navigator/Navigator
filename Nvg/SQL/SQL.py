@@ -39,26 +39,27 @@ class Dialogs(Model):
     style3=CharField()
 
 
-class SQL:
-    def get_building(self)->Building:
-        building = Building()
-        building.graph=self.get_graph()
-        building.floors=Floor.select()
-        return None
 
-    def get_graph(self)->Graph:
-        graph=Graph()
-        graph.connections=GraphConnection.select()
-        graph.points=Point.select()
-        graph.points_dict={}
-        for point in graph.points:
-            graph.points_dict[point.id]=point
-        return graph
+def get_building()->Building:
+    building = Building()
+    building.graph=get_graph()
+    building.floors=Floor.select()
+    return building
 
 
-Floor.create_table(True)
-Point.create_table(True)
-GraphConnection.create_table(True)
-Dialogs.create_table(True)
+
+def get_graph()->Graph:
+    graph=Graph()
+    graph.connections=GraphConnection.select()
+    graph.points=Point.select()
+    graph.points_dict={}
+    for point in graph.points:
+        graph.points_dict[point.id]=point
+    return graph
+
+#Floor.create_table(True)
+#Point.create_table(True)
+#GraphConnection.create_table(True)
+#Dialogs.create_table(True)
 
 #grandma = Person.select().where(Person.name == 'Grandma L.').get()

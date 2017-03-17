@@ -8,17 +8,20 @@ class WayBuilderClass:
     max_id = -1
 
     def __init__(self,building):
+        self.building=building
+        self.init_pre_count()
         return
 
     def init_pre_count(self):
-        for tmp_point in self.building.graph:
+        for tmp_point in self.building.graph.points:
             if tmp_point.id >= self.max_id: self.max_id = tmp_point.id
+        self.max_id+=1
         self.paths=[self.max_id]
         self.dijkstra_weight = []
         for i in range(self.max_id):
             self.dijkstra_weight.append([10000] * self.max_id)
         for conection in self.building.graph.connections:
-            self.dijkstra_weight[conection.point1.id][conection.point2.id]=conection.weight
+            self.dijkstra_weight[conection.point1][conection.point2]=conection.connection_weight
 
     def dijkstra(self, start,stop):
         self.dijkstra_connectons = []
@@ -79,15 +82,19 @@ class WayBuilderClass:
         path.weight=weight
 
         for point_id in self.paths:
-            for point in self.graph.points:
+            for point in self.building.graph.points:
                 if point.id==point_id:
                     path.points.append(point)
                     break
-        for i in range(0,len(path.points)-2):
-            for connection in self.graph.connections:
-                if connection.point1.id==path.points[i] and connection.point2.id==path.points[i+1]:
+
+
+        for i in range(0,len(path.points)-1):
+            for connection in self.building.graph.connections:
+                if connection.point1==path.points[i].id and connection.point2==path.points[i+1].id:
                     path.connections.append(connection)
-        floors_set={}
+
+
+        floors_set=set()
         for point in path.points:
             floors_set.add(point.floor_index)
         for floor in floors_set:
@@ -98,10 +105,7 @@ class WayBuilderClass:
         return path
 
 
-    #class Path:
-    #    points = []
-    #    connections = []
-    #    floors = []
+
 
     def psi_init(self):
         self.dijkstra_weight = []
