@@ -1,67 +1,160 @@
+from Nvg.Clases import *
+
 class WayBuilderClass:
-    graph = None
+    building=None;
     paths = None
-    dijkstra_graph = None
+    dijkstra_weight = None
     dijkstra_connectons=None
     max_id = -1
 
+    def __init__(self,building):
+        return
+
     def init_pre_count(self):
-        for tmp_point in self.graph:
+        for tmp_point in self.building.graph:
             if tmp_point.id >= self.max_id: self.max_id = tmp_point.id
         self.paths=[self.max_id]
-        self.dijkstra_graph = []
+        self.dijkstra_weight = []
         for i in range(self.max_id):
-            self.dijkstra_graph.append([10000] * self.max_id)
-        for conection in self.graph.connections:
-            self.dijkstra_graph[conection.point1.id][conection.point2.id]=conection.weight
+            self.dijkstra_weight.append([10000] * self.max_id)
+        for conection in self.building.graph.connections:
+            self.dijkstra_weight[conection.point1.id][conection.point2.id]=conection.weight
 
     def dijkstra(self, start,stop):
         self.dijkstra_connectons = []
-        for i in range(0, len(self.dijkstra_graph)):
+        for i in range(0, len(self.dijkstra_weight)):
             self.dijkstra_connectons.append([])
-            for j in range(0, len(self.dijkstra_graph[i])):
-                if (self.dijkstra_graph[i][j] < 10000):
+            for j in range(0, len(self.dijkstra_weight[i])):
+                if (self.dijkstra_weight[i][j] < 10000):
                     self.dijkstra_connectons[i].append(j)
 
         print(self.dijkstra_connectons)
 
-        start = 5
-        n = 10
+        size = self.max_id
         INF = 10 ** 10
 
-        dist = [INF] * n
+        dist = [INF] * size
         dist[start] = 0
-        prev = [None] * n
-        used = [False] * n
+        prev = [None] * size
+        used = [False] * size
         min_dist = 0
         min_vertex = start
         while min_dist < INF:
             i = min_vertex
             used[i] = True
-            for j in w[i]:
-                if dist[i] + g[i][j] < dist[j]:
-                    dist[j] = dist[i] + g[i][j]
+            for j in self.dijkstra_connectons[i]:
+                if dist[i] + self.dijkstra_weight[i][j] < dist[j]:
+                    dist[j] = dist[i] + self.dijkstra_weight[i][j]
                     prev[j] = i
             min_dist = INF
-            for i in range(n):
+            for i in range(size):
                 if not used[i] and dist[i] < min_dist:
                     min_dist = dist[i]
                     min_vertex = i
 
-        print('wdwdwdwdwd')
-        print(dist)
-        print('eddd')
-        j = 7
-        path = []
-        while j is not None:
-            path.append(j)
-            j = prev[j]
-        path = path[::-1]
-        print(path)
+        #print('dist massive')
+        #print(dist)
+        #print('print path')
+
+        self.paths = []
+        while stop is not None:
+            self.paths.append(stop)
+            stop = prev[stop]
+        self.paths = self.paths[::-1]
+        #print(self.paths)
+        #print('sum')
         sum = 0
-        for i in range(0, len(path) - 1):
-            sum += g[path[i]][path[i + 1]]
-            print(sum)
+        for i in range(0, len(self.paths) - 1):
+            sum += self.dijkstra_weight[self.paths[i]][self.paths[i + 1]]
+            #print(sum)
+        return sum
+
+
+    def request_path(self,start,stop):
+        weight = self.dijkstra(start,stop)
+        print(self.paths)
+
+        path = Path()
+
+        path.weight=weight
+
+        for point_id in self.paths:
+            for point in self.graph.points:
+                if point.id==point_id:
+                    path.points.append(point)
+                    break
+        for i in range(0,len(path.points)-2):
+            for connection in self.graph.connections:
+                if connection.point1.id==path.points[i] and connection.point2.id==path.points[i+1]:
+                    path.connections.append(connection)
+        floors_set={}
+        for point in path.points:
+            floors_set.add(point.floor_index)
+        for floor in floors_set:
+            path.floors.append(floor)
+
+
+        # нужен рерайтер картинок
+        return path
+
+
+    #class Path:
+    #    points = []
+    #    connections = []
+    #    floors = []
+
+    def psi_init(self):
+        self.dijkstra_weight = []
+        self.max_id = 10
+        self.paths = [0]*self.max_id
+
+        for i in range(self.max_id):
+            self.dijkstra_weight.append([10000] * self.max_id)
+
+        self.dijkstra_weight[1][2] = 5
+        self.dijkstra_weight[2][1] =5
+        self.dijkstra_weight[2][3] = 10
+        self.dijkstra_weight[3][2] = 10
+        self.dijkstra_weight[3][4] = 1
+        self.dijkstra_weight[4][3] = 1
+        self.dijkstra_weight[4][5] = 1
+        self.dijkstra_weight[5][4] = 1
+        self.dijkstra_weight[5][8] = 1
+        self.dijkstra_weight[8][5] = 1
+        self.dijkstra_weight[8][9] = 1
+        self.dijkstra_weight[9][8] = 1
+        self.dijkstra_weight[3][6] = 3
+        self.dijkstra_weight[6][3] = 3
+        self.dijkstra_weight[6][7] = 6
+        self.dijkstra_weight[7][6] = 6
+        self.dijkstra_weight[7][9] = 8
+        self.dijkstra_weight[9][7] = 8
+        # прочитать g // g[0 ... n - 1][0 ... n - 1] - массив, в котором хранятся веса рёбер, g[i][j] = 2000000000, если ребра между i и j нет
+
+        #      -4-5-8-
+        # 1-2-3<        >-9
+        #
+
+        # первая вершина-вторая вершина-вес перехода
+        # 1-2-5
+        # 2-1-5
+
+        #                -(3)-4-(5)-5-(2)-8-(5)-
+        # 1-(5)-2-(10)-3<                         >-9
+        #                -(3)-6-(6)-7-(8)------
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -84,59 +177,3 @@ class WayBuilderClass:
        #    valid[ID_min_weight] = False
        #if weight[stop]==10000:raise Exception('no path to point')
        #return weight
-
-    def request_path(self,start,stop):
-        print(self.dijkstra(start,stop))
-        print(self.paths)
-
-    def psi_init(self):
-        self.dijkstra_graph = []
-        self.max_id = 10
-        self.paths = [0]*self.max_id
-
-        for i in range(self.max_id):
-            self.dijkstra_graph.append([10000] * self.max_id)
-
-        self.dijkstra_graph[1][2] = 5
-        self.dijkstra_graph[2][1] =5
-        self.dijkstra_graph[2][3] = 10
-        self.dijkstra_graph[3][2] = 10
-        self.dijkstra_graph[3][4] = 1
-        self.dijkstra_graph[4][3] = 1
-        self.dijkstra_graph[4][5] = 1
-        self.dijkstra_graph[5][4] = 1
-        self.dijkstra_graph[5][8] = 1
-        self.dijkstra_graph[8][5] = 1
-        self.dijkstra_graph[8][9] = 1
-        self.dijkstra_graph[9][8] = 1
-        self.dijkstra_graph[3][6] = 3
-        self.dijkstra_graph[6][3] = 3
-        self.dijkstra_graph[6][7] = 6
-        self.dijkstra_graph[7][6] = 6
-        self.dijkstra_graph[7][9] = 8
-        self.dijkstra_graph[9][7] = 8
-        # прочитать g // g[0 ... n - 1][0 ... n - 1] - массив, в котором хранятся веса рёбер, g[i][j] = 2000000000, если ребра между i и j нет
-
-
-
-
-
-
-        #      -4-5-8-
-        # 1-2-3<        >-9
-        #
-
-
-
-
-        # первая вершина-вторая вершина-вес перехода
-        # 1-2-5
-        # 2-1-5
-
-
-
-
-
-        # -(3)-4-(5)-5-(2)-8-(5)-
-        # 1-(5)-2-(10)-3<                         >-9
-        #                -(3)-6-(6)-7-(8)------

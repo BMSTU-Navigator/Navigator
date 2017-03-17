@@ -7,6 +7,10 @@ class Building:
 class Graph:
     connections = []
     points=[]
+
+    points_dict={} #id-to point
+    #connections_point_1_dict={}
+    #connections_point_2_dict = {}
     def __init__(self):
         super().__init__()
         # load data from db
@@ -46,6 +50,7 @@ class Path:
     points = []
     connections = []
     floors = []
+    weight=-1
 
 class Point:
     id=-1
