@@ -1,3 +1,9 @@
+class Building:
+    graph=None
+    floors=None
+
+
+
 class Graph:
     connections = []
     points=[]
