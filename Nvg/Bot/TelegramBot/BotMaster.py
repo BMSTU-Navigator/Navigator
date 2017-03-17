@@ -6,10 +6,13 @@ from Nvg.Bot.TelegramBot import config
 from Nvg.old_code import telebot
 from Nvg.Bot.TelegramBot.Bot import *
 
-bot = telebot.TeleBot(config.token)
-
+id_counter=0
 id_list=[]
 bots={}
+
+
+bot = telebot.TeleBot(config.token)
+
 
 #
 
@@ -20,7 +23,8 @@ bots={}
 def repeat_all_messages(message): # Название функции не играет никакой роли, в принципе
     if message.chat.id not in id_list:
         id_list.append(message.chat.id)
-        tmp_bot=Bot(bot,message.chat.id)
+        tmp_bot=Bot(bot,message.chat.id,len(id_list))
+
         bots[message.chat.id]=tmp_bot
         tmp_bot=None
 
