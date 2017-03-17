@@ -1,12 +1,13 @@
 #https://groosha.gitbooks.io/telegram-bot-lessons/content/chapter1.h
 
-from Nvg.Bot.chatterbot import ChatBot
+
 
 from Nvg.Bot.TelegramBot import config
 from Nvg.old_code import telebot
 
+
 bot = telebot.TeleBot(config.token)
-chatbot = ChatBot('Charlie')
+
 
 
 
@@ -20,9 +21,8 @@ def repeat_all_messages(message): # Название функции не игр�
         bot.send_message(message.chat.id,'и тебе привет')
     else:
         text=message.text
-        response = chatbot.get_response(text)
-        print(response)
-        bot.send_message(message.chat.id, response)
+
+
 
 if __name__ == '__main__':
      bot.polling(none_stop=True)
