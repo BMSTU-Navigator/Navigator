@@ -23,7 +23,7 @@ class Bot:
     def __init__(self,telebot,dialog_id,id):
         self.telebot=telebot
         self.dialog_id=dialog_id
-        self.dialog_state=-2
+        self.dialog_state=0
         self.bot_id=id
 
         self.building = get_building()
@@ -32,6 +32,9 @@ class Bot:
 
 
     def get_answer(self,input_string):
+
+        """ Состояния -2 -1 нужны были для тестов"""
+
         if self.dialog_state==-2:
             self.send_message('bot itit-2')
             self.dialog_state=-1

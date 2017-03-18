@@ -10,7 +10,7 @@ class Drawer:
 
 
 
-    pass
+
 im = Image.open("cat.jpg")
 im.show()
 draw = ImageDraw.Draw(im)
