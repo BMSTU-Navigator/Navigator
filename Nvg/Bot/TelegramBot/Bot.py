@@ -87,7 +87,7 @@ class Bot:
 
                 path = self.wb.request_path(self.from_id, self.to_id)
 
-
+#
 #
                 for i in range(len(path.points)):
                     self.send_message(path.points[i].name)
