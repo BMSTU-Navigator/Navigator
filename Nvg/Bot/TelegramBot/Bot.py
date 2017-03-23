@@ -51,26 +51,38 @@ class Bot:
         if self.dialog_state==1:
             if(input_string=='да'):
                 self.send_message('Молодец')
-                self.send_message('Все, я готов тебе помочь. Напиши где ты? (ключ)')
+                self.send_message('Все, я готов тебе помочь.')
+                self.send_message('Вот карта здания')
+                self.send_photo('all.jpeg')
+                self.send_message('Напиши где ты? (ключ)')
                 self.dialog_state=2
             else:
                 self.send_message('Еще раз. Я тебя не понял')
             return
         if self.dialog_state==2:
-            if int(input_string) in range(0,17):
-                self.from_id=int(input_string)
-                self.send_message('Ага. ТЫ у кабинета '+str(self.from_id))
+            if True:#if int(input_string) in range(0,17):
+                self.from_id=get_id(input_string)#
+                #self.from_id=int(input_string)
+                self.send_message('Ага. ТЫ у кабинета '+input_string+' key='+str(self.from_id))
                 self.send_message('А куда тебе надо? (ключ)')
                 self.dialog_state=3
             else:
                 self.send_message('Еще раз. Я тебя не понял')
             return
-        if self.dialog_state==3:
-            if int(input_string) in range(0,17):
-                self.to_id=int(input_string)
-                self.send_message('Ага. ТЫ хочешь пройти в кабинет '+str(self.to_id))
-                self.send_message('Все, ща посчитаю маршрут и напишу тебе')
 
+        if self.dialog_state==3:
+            if True:#if int(input_string) in range(0,17):
+                self.to_id=get_id(input_string)#
+            #if int(input_string) in range(0,17):
+                #self.to_id=int(input_string)
+                self.send_message('Ага. ТЫ хочешь пройти в кабинет '+input_string +" key="+str(self.to_id))
+                self.send_message('Скажи тебе "подробный" или "простой" маршрут?')
+                #self.send_message('Все, ща посчитаю маршрут и напишу тебе')
+                self.dialog_state=4
+            else:
+                self.send_message('Еще раз. Я тебя не понял')
+            return
+        if self.dialog_state==4:
 
 
                 path = self.wb.request_path(self.from_id, self.to_id)
@@ -79,13 +91,13 @@ class Bot:
 
                 for i in range(len(path.points)):
                     self.send_message(path.points[i].name)
-                    #if (i < len(path.connections)): print('com ' + str(path.connections[i].connection_comment))
+                    if input_string=='подробный':
+                        if (i < len(path.connections)): self.send_message(str(path.connections[i].connection_comment))
 
-                self.send_message('а еще лови план здания')
-                self.send_photo('all.jpeg')
-                self.dialog_state=2
-            else:
-                self.send_message('Еще раз. Я тебя не понял')
+                #self.send_message('а еще лови план здания')
+                #self.send_photo('all.jpeg')
+                self.dialog_state=1
+
 
 
 
@@ -95,7 +107,7 @@ class Bot:
 
 
     def send_message(self,text):
-        self.telebot.send_message(self.dialog_id, text + '  answer of bot '+str(self.bot_id) +'  chat_id='+ str(self.dialog_id))
+        self.telebot.send_message(self.dialog_id, text )#+ '  answer of bot '+str(self.bot_id) +'  chat_id='+ str(self.dialog_id))
     def send_photo(self,path):
         self.telebot.send_message(self.dialog_id,'+')
         self.telebot.send_photo(self.dialog_id,open(path, 'rb'))

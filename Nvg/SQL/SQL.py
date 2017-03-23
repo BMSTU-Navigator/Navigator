@@ -3,6 +3,14 @@ from Nvg.Clases import *
 
 
 
+def get_id(string):
+    return (Point.get(Point.name==string)).id
+
+
+
+
+
+
 
 class Point(Model):
     id = IntegerField()
