@@ -1,0 +1,63 @@
+from peewee import *
+
+database = SqliteDatabase("wee.db")
+
+
+class User(Model):
+    """
+    Класс пользователь
+    """
+    id = PrimaryKeyField()
+    name = CharField()
+
+
+class Node(Model):
+    """
+    Создаем Узел для связи(Пункт маршрута: столовая, 301, и т.д.)
+    """
+    id = PrimaryKeyField()
+    start_point = IntegerField()
+    end_point = IntegerField()
+
+
+class Relative(Model):
+    """
+    Создаем таблицу связей
+    """
+    id = PrimaryKeyField()
+    node1 = ForeignKeyField(Node, related_name='first_node')
+    node2 = ForeignKeyField(Node, related_name='second_node')
+    weight = IntegerField()
+
+
+class Dialog(Model):
+    """
+    Создаем таблицу для выбора стиля диалога
+    """
+    id = IntegerField()
+    style_1 = CharField()
+    style_2 = CharField()
+    style_3 = CharField()
+
+if __name__ == "__main__":
+    try:
+        User.create_table()
+    except OperationalError:
+        print("User table already exists!")
+
+    try:
+        Relative.create_table()
+    except OperationalError:
+        print("Relative table already exists!")
+
+    try:
+        Dialog.create_table()
+    except OperationalError:
+        print("Dialog table already exists!")
+
+    try:
+        Node.create_table()
+    except OperationalError:
+        print("Node table already exists!")
+
+
